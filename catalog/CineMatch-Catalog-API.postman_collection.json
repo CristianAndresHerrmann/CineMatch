@@ -1,0 +1,265 @@
+{
+  "info": {
+    "_postman_id": "cinematch-catalog-api",
+    "name": "CineMatch Catalog API",
+    "description": "Complete API testing collection for CineMatch catalog microservice",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "List All Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"]
+            }
+          }
+        },
+        {
+          "name": "List Movies with Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies?page=1&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "size", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Genre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies?genre=Action&size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"],
+              "query": [
+                {"key": "genre", "value": "Action"},
+                {"key": "size", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by Year",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies?year=2023",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"],
+              "query": [{"key": "year", "value": "2023"}]
+            }
+          }
+        },
+        {
+          "name": "Filter by Rating Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies?minRating=7.5&maxRating=9.0",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"],
+              "query": [
+                {"key": "minRating", "value": "7.5"},
+                {"key": "maxRating", "value": "9.0"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Complex Filter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies?genre=Drama&minRating=8.0&page=1&size=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"],
+              "query": [
+                {"key": "genre", "value": "Drama"},
+                {"key": "minRating", "value": "8.0"},
+                {"key": "page", "value": "1"},
+                {"key": "size", "value": "5"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Movie by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/tmdb:550",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "tmdb:550"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/search?query=avengers",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "search"],
+              "query": [{"key": "query", "value": "avengers"}]
+            }
+          }
+        },
+        {
+          "name": "Search with Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/search?query=fight&page=1&size=3",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "search"],
+              "query": [
+                {"key": "query", "value": "fight"},
+                {"key": "page", "value": "1"},
+                {"key": "size", "value": "3"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Genres & Categories",
+      "item": [
+        {
+          "name": "Get All Genres",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/genres",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "genres"]
+            }
+          }
+        },
+        {
+          "name": "Get Trending Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/trending",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "trending"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "Movie Not Found",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/tmdb:999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "tmdb:999999"]
+            }
+          }
+        },
+        {
+          "name": "Invalid Movie ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/invalid-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "invalid-id"]
+            }
+          }
+        },
+        {
+          "name": "Empty Search Query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/search?query=",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "search"],
+              "query": [{"key": "query", "value": ""}]
+            }
+          }
+        },
+        {
+          "name": "Invalid Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies?page=0&size=101",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies"],
+              "query": [
+                {"key": "page", "value": "0"},
+                {"key": "size", "value": "101"}
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    }
+  ]
+}

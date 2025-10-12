@@ -1,0 +1,46 @@
+{
+  "name": "catalog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev:docker": "docker-compose up --build",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:prod": "NODE_ENV=production node dist/index.js",
+    "seed:dev": "ts-node-dev --transpile-only src/seed/index.ts",
+    "seed:compiled": "node dist/seed.js",
+    "seed": "ts-node-dev --transpile-only src/seed.ts",
+    "seed:docker": "docker-compose exec catalog pnpm run seed",
+    "clean": "rimraf dist/",
+    "lint": "echo \"Linting not configured yet\"",
+    "docker:build": "docker build -t cinematch-catalog .",
+    "docker:run": "docker run -p 3001:3001 --env-file .env cinematch-catalog",
+    "docker:clean": "docker-compose down -v"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "ioredis": "^5.8.0",
+    "mongoose": "^8.18.2",
+    "morgan": "^1.10.1",
+    "p-limit": "^7.1.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.5.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
+}
