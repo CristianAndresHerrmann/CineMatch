@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: cinematch_users_db
+    restart: always
+    environment:
+      POSTGRES_DB: cinematch_users
+      POSTGRES_USER: cinematch_user
+      POSTGRES_PASSWORD: cinematch_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cinematch_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  users:
+    build: .
+    container_name: cinematch_users_service
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: postgresql://cinematch_user:cinematch_password@db:5432/cinematch_users
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRE_MINUTES: 30
+      BCRYPT_ROUNDS: 12
+      HOST: 0.0.0.0
+      PORT: 8001
+      DEBUG: "True"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cinematch_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@cinematch.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+
