@@ -18,6 +18,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - cinematch-network
 
   users:
     build: .
@@ -36,9 +38,12 @@ services:
       HOST: 0.0.0.0
       PORT: 8001
       DEBUG: "True"
+      CATALOG_SERVICE_URL: http://cinematch-catalog-service:3001
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - cinematch-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -51,7 +56,13 @@ services:
       - "5050:80"
     depends_on:
       - db
+    networks:
+      - cinematch-network
 
 volumes:
   db_data:
 
+networks:
+  cinematch-network:
+    external: true
+    name: cinematch-network

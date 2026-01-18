@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
-class UserFavorites(BaseModel):
+class UserWatched(BaseModel):
     """Schema básico con solo IDs"""
     movie_ids: List[int]
 
@@ -20,7 +20,7 @@ class MovieInfo(BaseModel):
     idioma_original: Optional[str] = None
     tmdb_id: Optional[int] = None
 
-class EnrichedFavorites(BaseModel):
+class EnrichedWatched(BaseModel):
     """Schema enriquecido con información completa de películas"""
     movie_ids: List[int]
     movies: List[MovieInfo] = []

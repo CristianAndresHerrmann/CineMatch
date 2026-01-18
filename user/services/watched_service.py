@@ -1,25 +1,25 @@
 from sqlalchemy.orm import Session
-from db.models import User, UserFavorite
-from schemas.favorites import UserFavorites, EnrichedFavorites, MovieInfo
+from db.models import User, UserWatched
+from schemas.watched import UserWatched as UserWatchedSchema, EnrichedWatched, MovieInfo
 from services.catalog_client import catalog_client
 from fastapi import HTTPException
 import logging
 
 logger = logging.getLogger(__name__)
 
-def get_user_favorites(user: User, db: Session) -> list:
-    """Obtiene la lista de IDs de películas favoritas del usuario"""
-    return [f.movie_id for f in db.query(UserFavorite).filter(UserFavorite.user_id == user.id).all()]
+def get_user_watched(user: User, db: Session) -> list:
+    """Obtiene la lista de IDs de películas vistas por el usuario"""
+    return [w.movie_id for w in db.query(UserWatched).filter(UserWatched.user_id == user.id).all()]
 
-async def get_user_favorites_enriched(user: User, db: Session) -> EnrichedFavorites:
+async def get_user_watched_enriched(user: User, db: Session) -> EnrichedWatched:
     """
-    Obtiene la lista de favoritos enriquecida con información completa de películas.
+    Obtiene la lista de películas vistas enriquecida con información completa.
     Consulta el microservicio de Catálogo para cada película.
     """
-    movie_ids = get_user_favorites(user, db)
+    movie_ids = get_user_watched(user, db)
     
     if not movie_ids:
-        return EnrichedFavorites(
+        return EnrichedWatched(
             movie_ids=[],
             movies=[],
             total=0,
@@ -52,25 +52,25 @@ async def get_user_favorites_enriched(user: User, db: Session) -> EnrichedFavori
             except Exception as e:
                 logger.error(f"Error al procesar película {movie_id}: {e}")
     
-    return EnrichedFavorites(
+    return EnrichedWatched(
         movie_ids=movie_ids,
         movies=movies,
         total=len(movie_ids),
         enriched=len(movies)
     )
 
-def add_favorite_movie(user: User, favorites: UserFavorites, db: Session):
-    """Agrega películas a la lista de favoritos del usuario"""
-    for movie_id in favorites.movie_ids:
-        exists = db.query(UserFavorite).filter_by(user_id=user.id, movie_id=movie_id).first()
+def add_watched_movie(user: User, watched: UserWatchedSchema, db: Session):
+    """Agrega películas a la lista de vistas del usuario"""
+    for movie_id in watched.movie_ids:
+        exists = db.query(UserWatched).filter_by(user_id=user.id, movie_id=movie_id).first()
         if not exists:
-            db.add(UserFavorite(user_id=user.id, movie_id=movie_id))
+            db.add(UserWatched(user_id=user.id, movie_id=movie_id))
     db.commit()
 
-def remove_favorite_movie(user: User, favorites: UserFavorites, db: Session):
-    """Elimina películas de la lista de favoritos del usuario"""
-    for movie_id in favorites.movie_ids:
-        fav = db.query(UserFavorite).filter_by(user_id=user.id, movie_id=movie_id).first()
-        if fav:
-            db.delete(fav)
+def remove_watched_movie(user: User, watched: UserWatchedSchema, db: Session):
+    """Elimina películas de la lista de vistas del usuario"""
+    for movie_id in watched.movie_ids:
+        watched_item = db.query(UserWatched).filter_by(user_id=user.id, movie_id=movie_id).first()
+        if watched_item:
+            db.delete(watched_item)
     db.commit()

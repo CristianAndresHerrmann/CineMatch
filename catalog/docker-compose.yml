@@ -25,6 +25,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - cinematch-network
 
   mongodb:
     image: mongo:6-jammy
@@ -41,6 +43,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - cinematch-network
 
   redis:
     image: redis:7-alpine
@@ -56,9 +60,16 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - cinematch-network
 
 volumes:
   mongo_data:
     driver: local
   redis_data:
     driver: local
+
+networks:
+  cinematch-network:
+    driver: bridge
+    name: cinematch-network
